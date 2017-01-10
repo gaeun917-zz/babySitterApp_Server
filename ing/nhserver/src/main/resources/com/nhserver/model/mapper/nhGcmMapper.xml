@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 논리적 클래스 만들기 -->  
+<mapper namespace="com.nhserver.model.mapper.nhGcmMapper">
+
+	<sql id="selectDefault">
+		SELECT no, pid, ptoken, cid, ctoken
+		FROM gcm
+	</sql>
+
+	<insert id="insertGCM" 
+		parameterType="GCM">
+		INSERT INTO gcm 
+		(no, pid, ptoken, cid, ctoken)
+		VALUES 
+		(GCM_SEQUENCE.NEXTVAL,#{pId}, #{pToken}, #{cId}, #{cToken})
+	</insert>
+
+	<!-- 논리적 메서드 만들기 -->
+	<select id="selectGCMs" resultType="GCM">
+		<include refid="selectDefault" />
+		<!--  		
+		SELECT memberId, email, userType, active, regDate
+		FROM member
+		-->
+	</select>
+	
+	<select id="selectGCMBypId"
+		parameterType="string" resultType="GCM">
+		<include refid="selectDefault" />
+		WHERE pid = #{pId}
+	</select>
+	
+	<select id="selectGCMBycId"
+		parameterType="string" resultType="GCM">
+		<include refid="selectDefault" />
+		WHERE cid = #{cId}
+	</select>
+	<insert id="updateTokenByCid" 
+		parameterType="GCM">
+		UPDATE GCM 
+		SET cToken = #{cToken}
+		WHERE cId = #{cId}
+	</insert>
+	<insert id="updateTokenByPid" 
+		parameterType="GCM">
+		UPDATE GCM 
+		SET pToken = #{pToken}
+		WHERE pId = #{pId}
+	</insert>
+
+</mapper>
+  
+

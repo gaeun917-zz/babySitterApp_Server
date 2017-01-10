@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 논리적 클래스 만들기 -->  
+<mapper namespace="com.nhserver.model.mapper.nhManboMapper">
+
+	<!-- <sql id="selectDefault">
+		SELECT memberId, regDate
+		FROM manbo
+	</sql> -->
+
+	<insert id="insertManbo" 
+		parameterType="Manbo">
+		INSERT INTO manbo 
+		(regDate, count, memberId)
+		VALUES 
+		(#{regDate}, #{count}, #{memberId})
+	</insert>
+
+	<select id="selectRegdateByMemberId"
+		parameterType="string" resultType="Manbo">
+		<!-- <include refid="selectDefault" />
+		WHERE memberId = #{memberId} AND regdate = #{regDate} -->
+		SELECT *
+		FROM(SELECT regDate
+			 FROM manbo
+			 WHERE memberid = #{memberId}
+			 ORDER BY regDate DESC)
+		WHERE rownum = 1
+	</select>
+
+	<!-- 논리적 메서드 만들기 -->
+	<!-- <select id="selectMembers" resultType="Member">
+		<include refid="selectDefault" />
+		 		
+		SELECT memberId, email, userType, active, regDate
+		FROM member
+		
+	</select>
+	
+	<select id="selectMemberById"
+		parameterType="string" resultType="Member">
+		<include refid="selectDefault" />
+		WHERE memberId = #{memberId}
+	</select>
+	
+	<select id="selectMemberByIdAndPasswd"
+		parameterType="hashMap" resultType="Member">
+		<include refid="selectDefault" />
+		WHERE memberId = #{memberId} AND passwd = #{passwd}
+	</select> -->
+	
+
+</mapper>
+  
+

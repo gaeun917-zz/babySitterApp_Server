@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="com.babySitter.model.mapper.SitterMapper">
+	<resultMap type="Sitter" id="sitter_map" >
+     	<id property="sitter_no" column="sitter_no" />
+     	  <result property="booking_no" column="booking_no" />
+      	  <result property="name" column="name" />
+	      <result property="sitter_age" column="sitter_age" />
+	      <result property="bio" column="bio" />
+	      <result property="school" column="school" />
+	      <result property="gender" column="gender" />
+	      <result property="photo" column="photo" />
+	      <result property="sitter_quality1" column="sitter_quality1" />
+	      <result property="address" column="address" />
+	      <result property="email" column="email" />
+	           
+	      <collection property="skill" column="sitter_no" 
+	      			  select="selectSkillsBySitterNo"/>
+	      <collection property="age" column="sitter_no" 
+	      			  select="selectAgeGroupBySitterNo"/>
+	      <collection property="booking" column="sitter_no" 
+	          		  select="selectBookingBySitterNo"/>
+  </resultMap>
+  
+  <resultMap type="Skill" id="skill_map" >
+      <id property="skill_no" column="skill_no" />
+      <result property="sitter_no" column="sitter_no" />
+      <result property="skill_type" column="skill_type" />
+  </resultMap>	
+  
+   <resultMap type="Age" id="age_map">
+      <id property="age_no" column="sitter_no" />      
+      <result property="sitter_no" column="sitter_no" />
+      <result property="age_type" column="age_type" />
+  </resultMap>	
+   
+    <resultMap type="Booking" id="booking_map" >
+      <id property="booking_no" column="booking_no" />
+      <result property="child_no" column="child_no" />
+      <result property="sitter_no" column="sitter_no" />
+      <result property="pick_date" column="pick_date" />
+      <result property="start_time" column="start_time" />
+      <result property="end_time" column="end_time" />
+      <result property="reg_date" column="reg_date" />
+  </resultMap>	
+
+<resultMap type="Children" id="children_map">
+		<id property="child_no" column="child_no" />		
+		<result property="mother_no" column="mother_no" />
+		<result property="first_name" column="first_name" />
+		<result property="last_name" column="last_name" />	
+		<result property="gender" column="gender" />
+		<result property="birthday" column="birthday" />
+		<result property="photo" column="photo" />
+		<result property="toilet" column="toilet" />	
+		<result property="child_interest" column="child_interest" />
+		<result property="bath_time" column="bath_time" />
+		<result property="bed_time" column="bed_time" />
+		<result property="note" column="note" />	
+	</resultMap>
+   <!-- 3개 테이블 조인: 모든 인포 뽑아내기  -->
+	<sql id="selectDefault">
+		SELECT  sitter_no, name, sitter_age, bio, school, 
+				gender, photo, 
+				sitter_quality1, address, email  
+		FROM    Sitter 
+	</sql>
+  
+  
+    
+  
+  
+   
+	<insert id="insertSitter" parameterType="Sitter">      
+        INSERT INTO Sitter 
+                (sitter_no, name, sitter_age, bio, school, 
+                gender, 
+                sitter_quality, 
+                address, email, skills)
+        VALUES 
+               (SITTER_SEQUENCE.nextval, #{name}, #{sitter_age}, #{bio}, #{school}, 
+                #{gender},
+                #{sitter_quality}, 
+                #{address}, #{email}, 1)
+    </insert> 
+
+
+
+
+    <insert id="insertAgeGroup" parameterType="Age">      
+        INSERT INTO Age 
+        (age_no, sitter_no, age_type)
+        VALUES 
+        (AGEGROUP_SEQUENCE.nextval, #{sitter_no}, #{age_type} )
+    </insert> 
+  
+  
+    <insert id="insertSkills" parameterType="Skill">      
+    	INSERT INTO Skills
+      	(skills_no, sitter_no, skill_type)
+        VALUES 
+        (SKILLS_SEQUENCE.nextval, #{sitter_no}, #{skill_type} )
+    </insert> 
+  
+  
+  
+  
+  
+    <select id="selectSitterList" parameterType="hashMap" resultMap="children_map">
+		<include refid="selectDefault" />
+	</select>
+	
+    <select id="selectSitterBySitterNo" parameterType="int" resultMap="sitter_map">
+    	SELECT * 
+    	FROM Sitter
+    	WHERE sitter_no = #{sitter_no}
+    </select> 
+  
+    <select id="selectSkillsBySitterNo" parameterType="int" resultMap="sitter_map">
+	    SELECT skill_type
+	    FROM Skills
+	    WHERE sitter_no = #{sitter_no}
+    </select>
+    
+    <select id="selectAgeGroupBySitterNo" parameterType="int" resultMap="sitter_map">
+	    SELECT age_type
+	    FROM Age
+	    WHERE sitter_no = #{sitter_no}
+    </select>
+
+    <select id="selectBookingBySitterNo" parameterType="int" resultMap="sitter_map">
+	    SELECT *
+	    FROM Booking
+	    WHERE sitter_no = #{sitter_no}
+    </select>
+
+    <select id="selectSitterBySkills" parameterType="String" resultMap="sitter_map">
+	    SELECT *
+	    FROM Sitter
+	    WHERE skill_type = #{skill_type}
+    </select>
+    <!-- mother sitter quality와 sitter quality가 일치  -->
+    <select id="selectSitterByQuality" parameterType="string" resultMap="sitter_map">
+	    SELECT s.sitter_no, s.name, s.sitter_age, s.bio, 
+	           s.school, s.info, s.photo, 
+	           s.sitter_quality1, s.sitter_quality2, s.sitter_quality3,  
+	    FROM   Sitter s, Mother m
+	    WHERE  m.sitter_quality1 = #{sitter_quality1} 
+	   			OR m.sitter_quality1 = #{sitter_quality2} 
+	    		OR m.sitter_quality1 = #{sitter_quality3}	 
+    </select>
+  
+  
+  
+  
+    
+    <update id="deletSitterBySitterNo" parameterType="int" >
+     	UPDATE Sitter
+	    SET status = 'Deactive'  
+	    WHERE sitter_no = #{sitter_no}
+    </update>
+  
+  
+  
+  
+  
+   
+</mapper>

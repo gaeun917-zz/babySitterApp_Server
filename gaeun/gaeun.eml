@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component LANGUAGE_LEVEL="JDK_1_5" inheritJdk="true">
+	<output-test url="file://$MODULE_DIR$/target/test-classes"/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<testFolder url="file://$MODULE_DIR$/src/test/java"/>
+		<excludeFolder url="file://$MODULE_DIR$/target"/>
+	</contentEntry>
+	<levels>
+		<level name="org.thymeleaf:thymeleaf:Release" value="project"/>
+		<level name="org.thymeleaf.extras:thymeleaf-extras-springsecurity4:Release" value="project"/>
+		<level name="org.thymeleaf:thymeleaf-spring4:Release" value="project"/>
+		<level name="javax.json.processing-1.0" value="project"/>
+		<level name="org.thymeleaf:thymeleaf:Release1" value="project"/>
+		<level name="org.thymeleaf.extras:thymeleaf-extras-java8time:Release" value="project"/>
+		<level name="org.thymeleaf.extras:thymeleaf-extras-springsecurity4:Release1" value="project"/>
+		<level name="org.thymeleaf:thymeleaf-spring4:Release1" value="project"/>
+		<level name="ejb-3.2" value="project"/>
+		<level name="org.thymeleaf:thymeleaf:Release2" value="project"/>
+		<level name="org.thymeleaf:thymeleaf-spring4:Release2" value="project"/>
+		<level name="javax.resource-api-1.7" value="project"/>
+		<level name="ConcurrencyUtilities-1.0" value="project"/>
+		<level name="JBoss Weld-2.0.3" value="project"/>
+		<level name="Hibernate Validator-5.0.1" value="project"/>
+	</levels>
+</component>

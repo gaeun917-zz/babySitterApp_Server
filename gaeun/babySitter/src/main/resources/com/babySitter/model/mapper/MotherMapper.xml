@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 논리적 클래스 만들기 -->
+<mapper namespace="com.babySitter.model.mapper.MotherMapper">
+
+	<resultMap type="Mother" id="mother_map">
+		<id property="mother_no" column="mother_no" />		
+		<result property="email" column="email" />
+		<result property="password" column="password" />
+		<result property="confirm_password" column="confirm_password" />
+		<result property="phone" column="phone" />
+		<result property="photo" column="photo" />	
+		<result property="address" column="address" />
+		<result property="first_name" column="first_name" />
+		<result property="last_name" column="last_name" />			
+		<result property="facebook_id" column="facebook_id" />
+		<result property="reg_date" column="reg_date" />
+		<result property="sitter_quality1" column="sitter_quality1" />			
+		<result property="sitter_quality2" column="sitter_quality2" />
+		<result property="sitter_quality3" column="sitter_quality3" />
+		
+		<collection property="payment" column="mother_no" 
+			             select="selectPaymentByMotherNo"/><!--엄마의 페이먼트 정보 1:1  -->
+		    <!-- 아이들이 2이상일때 1:many property에서 
+		    dto class 빈 이름, column은 FK, select는 적용할 method -->
+		    <collection property="children" column="mother_no"
+		                select="selectChildrenByMotherNo"/>
+	</resultMap>
+<!-- 조인트 테이블이면 여기에  result map을 가져와야 함! --> 	
+<!-- 카드 정보  --> 
+	<resultMap type="Payment" id="payment_map">
+		<id property="mother_no" column="mother_no" />		
+		<result property="cvv" column="cvv" />
+		<result property="first_name" column="first_name" />
+		<result property="last_name" column="last_name" />
+		<result property="card_number" column="card_number" />
+		<result property="expiration" column="expiration" />
+		<result property="billing_address" column="billing_address" />	
+	</resultMap>
+<!-- 아이 정보  --> 	
+	<resultMap type="Children" id="children_map">
+		<id property="child_no" column="child_no" />		
+		<result property="mother_no" column="mother_no" />
+		<result property="first_name" column="first_name" />
+		<result property="last_name" column="last_name" />	
+		<result property="gender" column="gender" />
+		<result property="birthday" column="birthday" />
+		<result property="photo" column="photo" />
+		<result property="toilet" column="toilet" />	
+		<result property="child_interest" column="child_interest" />
+		<result property="bath_time" column="bath_time" />
+		<result property="bed_time" column="bed_time" />
+		<result property="note" column="note" />	
+	</resultMap>
+
+
+
+
+	<sql id="selectDefault">
+		SELECT mother_no, email, password, phone, address, first_name, last_name, 
+			  facebook_id, reg_date, sitter_quality1, sitter_quality2, sitter_quality3
+		FROM Mother
+	</sql>
+
+<!--value 에서는 위에 명시된 column명을 씀    -->
+	<insert id="insertMother" parameterType="Mother" >
+		INSERT INTO Mother 
+			(mother_no, email, password, phone, address, first_name, last_name)
+		VALUES
+			(MOTHER_SEQUENCE.nextval, #{email},  #{password}, #{phone}, #{address}, #{first_name}, #{last_name})
+	</insert> 
+
+
+	<insert id="insertPayment" parameterType="Payment" >
+		INSERT INTO Payment 
+			(mother_no, cvv, first_name, last_name, 
+			card_number, expiration, billing_address)
+		VALUES
+			(#{mother_no}, #{cvv}, #{first_name}, #{last_name}, 
+			#{card_number}, #{expiration}, #{billing_address})
+	</insert>
+	
+	
+<!-- 샘이 만들어준 예제   -->
+	<select id="selectChildrenByMotherNo" parameterType="int" resultType="Children" resultMap="children_map">
+		SELECT * 
+		FROM Children c
+		WHERE mother_no = #{mother_no}
+	</select>
+	
+<!--List<Payment>로 받아야함  -->
+	<select id="selectPaymentByMotherNo" parameterType="int" resultType="Payment" resultMap="payment_map" >
+		SELECT * 
+		FROM Payment p
+		WHERE mother_no = #{mother_no}	
+	</select>
+	
+	
+	
+<!-- 샘이 만들어준 예제 : dao에서 파라미터를 1개 이상 받을때 파라메터타입은 HashMap을  -->
+     <!-- 모든 엄마들 구하기   -->
+     <select id="selectMotherList" parameterType="hashMap" resultType="Mother" resultMap="mother_map">
+		<include refid="selectDefault" />
+	</select> 
+
+
+<!-- dao에서 파라미터를 1개 이상 받을때 파라메터타입은 HashMap  -->	
+	<select id="selectMotherByEmailAndPassword" parameterType="hashMap" resultMap="mother_map">
+		<include refid="selectDefault" />
+		WHERE email = #{email} AND password = #{password}
+	</select>	
+	
+	
+	<select id="selectMotherByEmail" parameterType="String" resultMap="mother_map">
+		<include refid="selectDefault" />
+		WHERE email = #{email}
+	</select>
+
+	
+	<select id="selectMotherByMotherNo" parameterType="int" resultMap="mother_map">
+		<include refid="selectDefault" />
+		WHERE mother_no = #{mother_no}
+	</select>
+
+	<!--resultMap 만들지 않고, 다른 곳의 result map 이용하려면 namespace 로 가져오고 .sitter_map
+	    ex) resultMap="com.babySitter.model.mapper.SitterMapper.sitter_map     -->		
+	 	
+	<!-- parameterType = 시퀀스로 멤버 서치 하기때문에 int으로   -->
+	<update id="changePasswordByMotherNo" parameterType="int">
+		UPDATE Mother 
+		SET password= #{password}  
+		WHERE mother_no = #{mother_no}
+	</update>
+	
+	<!--회원 정보 수정 -->
+	<update id="updateAddressAndPhoneByMotherNo" parameterType="int">
+		UPDATE Mother
+		SET address = #{address},
+			phone = #{phone}
+		WHERE mother_no = #{mother_no}	
+	</update>
+	
+	<update id="deleteByMotherNo" parameterType="int" >
+		UPDATE Mother
+		SET status = 'Deactive'  
+		WHERE mother_no = #{mother_no}
+	</update>
+
+</mapper>
+  
+

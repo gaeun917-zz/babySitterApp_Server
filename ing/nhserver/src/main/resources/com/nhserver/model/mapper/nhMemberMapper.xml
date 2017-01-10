@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 논리적 클래스 만들기 -->  
+<mapper namespace="com.nhserver.model.mapper.nhMemberMapper">
+
+	<sql id="selectDefault">
+		SELECT memberId, email, regDate, location, gender, image, passwd, phone, name, instanceId
+		FROM member
+	</sql>
+
+	<insert id="insertMember" 
+		parameterType="Member">
+		INSERT INTO member 
+		(memberId, email, passwd, location, gender, image, phone, name, instanceId)
+		VALUES 
+		(#{memberId}, #{email}, #{passwd}, #{location}, #{gender}, #{image}, #{phone}, #{name}, #{instanceId})
+	</insert>
+	
+	<insert id="updateInstanceId" 
+		parameterType="Member">
+		UPDATE member 
+		SET instanceId = #{instanceId}
+		WHERE memberId = #{memberId}
+	</insert>
+
+	<!-- 논리적 메서드 만들기 -->
+	<select id="selectMembers" resultType="Member">
+		<include refid="selectDefault" />
+		<!--  		
+		SELECT memberId, email, userType, active, regDate
+		FROM member
+		-->
+	</select>
+	
+	<select id="selectMemberById"
+		parameterType="string" resultType="Member">
+		<include refid="selectDefault" />
+		WHERE memberId = #{memberId}
+	</select>
+	
+	<select id="selectMemberByIdAndPasswd"
+		parameterType="hashMap" resultType="Member">
+		<include refid="selectDefault" />
+		WHERE memberId = #{memberId} AND passwd = #{passwd}
+	</select>
+	
+	<!-- <select id="selectMemberByIdAndBirth"
+		parameterType="hashMap" resultType="Member">
+		<include refid="selectDefault" />
+		WHERE memberId = #{memberId} AND passwd = #{passwd}
+	</select> -->
+	
+
+</mapper>
+  
+

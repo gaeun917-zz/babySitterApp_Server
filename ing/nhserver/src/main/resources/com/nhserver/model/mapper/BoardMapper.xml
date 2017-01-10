@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.nhserver.model.mapper.BoardMapper">
+
+	<resultMap type="Board" id="boardMap">
+		<id property="boardNo" column="boardno" />
+		<result property="title" column="title" />
+		<result property="writer" column="writer" />
+		<result property="content" column="content" />
+		<result property="regDate" column="regdate" />
+		<result property="readCount" column="readcount" />
+		<result property="deleted" column="deleted" />
+		<result property="group" column="groupno" />
+		<result property="step" column="step" />
+		<result property="depth" column="depth" />
+		<collection property="comments" column="boardno"
+			select="selectBoardCommentsByBoardNo" />
+	</resultMap>
+	
+		<resultMap type="Board" id="boardMap2">
+		<id property="boardNo" column="boardno" />
+		<result property="title" column="title" />
+		<result property="writer" column="writer" />
+		<result property="content" column="content" />
+		<result property="regDate" column="regdate" />
+		<result property="readCount" column="readcount" />
+		<result property="deleted" column="deleted" />
+		<result property="group" column="groupno" />
+		<result property="step" column="step" />
+		<result property="depth" column="depth" />
+	</resultMap>
+	
+	<insert id="insertBoard" parameterType="Board"
+		useGeneratedKeys="true" 
+		keyProperty="boardNo" keyColumn="boardno">
+		INSERT INTO board
+		(
+			boardno
+			, title
+			, writer
+			, content
+			, groupno
+			, step
+		)
+		VALUES (board_sequence.nextval, #{title}, #{writer}, #{content}, board_sequence.currval, 1)
+	</insert>
+	
+	<select id="selectBoardList"
+		parameterType="hashMap"
+		resultMap="boardMap2">
+		SELECT *
+		FROM
+		(
+			SELECT 
+				rownum idx, s.* 
+			FROM
+			
+			(
+				SELECT 
+					boardno, title, writer,
+					regdate, readcount,
+					deleted, groupno, step, depth
+				FROM
+					board
+				ORDER BY groupno DESC, step ASC
+			) s			
+		)			
+		WHERE idx >= #{start} AND idx <![CDATA[<]]> #{last}
+	</select>
+	
+	<select id="selectBoardByBoardNo"
+		parameterType="int" resultMap="boardMap">
+		SELECT 
+			boardno, title, writer, content,
+			regdate, readcount,
+			deleted, groupno, step, depth
+		FROM board
+		WHERE boardno = #{boardNo} AND deleted = '0'
+	</select>
+	
+	<select id="selectBoardCommentsByBoardNo"
+		parameterType="int" resultType="BoardComment">
+		SELECT commentno, boardno, writer, content, regdate
+		FROM boardcomment
+		WHERE boardno = #{boardNo}
+	</select>
+	
+	<select id="selectBoardCount" resultType="int">
+		SELECT COUNT(*) FROM board
+	</select>
+
+	<update id="deleteBoard" parameterType="int">
+		UPDATE board SET deleted = '1' WHERE boardno = #{boardNo}
+	</update>
+
+	<update id="updateBoard"
+		parameterType="Board">
+		UPDATE board 
+		SET title = #{title}, content = #{content}  
+		WHERE boardno = #{boardNo}
+	</update>
+	  
+	<update id="increaseStepNo" parameterType="Board">
+		UPDATE board 
+		SET step = step + 1  
+		WHERE step >= #{step} AND groupno = #{group}
+	</update>	
+	
+	<insert id="insertBoardReply"
+		parameterType="Board">
+		INSERT INTO board
+		(
+			boardno, title, writer, content, deleted, 
+			groupno, step, depth
+		)
+		VALUES 
+		(
+			board_sequence.nextval, #{title}, #{writer}, #{content}, '0', 
+			#{group}, #{step}, #{depth}
+		)
+	</insert>
+	
+	<update id="increaseBoardReadCount" parameterType="int">
+		UPDATE board
+		SET readcount = readcount + 1 
+		WHERE boardno = #{boardNo}
+	</update>
+	
+	<insert id="insertBoardComment"
+		parameterType="BoardComment">
+		INSERT INTO boardcomment
+		(
+			commentno, boardno, writer, content
+		)
+		VALUES 
+		(
+			boardcomment_sequence.nextval, #{boardNo}, #{writer}, #{content}
+		)	
+	</insert>
+	<update id="updateComment"
+		parameterType="BoardComment">
+		UPDATE boardcomment
+		SET content = #{content}
+		WHERE commentno = #{commentNo}
+	</update>
+	
+	<delete id="deleteComment" parameterType="int">
+		DELETE FROM boardcomment				
+		WHERE commentno = #{commentNo}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<properties>
+		<property name="driver" value="com.jdbc.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@210.16.214.202:1521:xe" />
+		<property name="username" value="minute" />
+		<property name="password" value="hot" />
+	</properties>
+	
+	<typeAliases>
+		<typeAlias type="com.nhserver.model.dto.Member" alias="Member"/>
+		<typeAlias type="com.nhserver.model.dto.ArrayListMember" alias="ArrayListMember"/>
+		<typeAlias type="com.nhserver.model.dto.Board" alias="Board"/>
+		<typeAlias type="com.nhserver.model.dto.Manbo" alias="Manbo"/>
+		<typeAlias type="com.nhserver.model.dto.Location" alias="Location"/>
+		<typeAlias type="com.nhserver.model.dto.GCM" alias="GCM"/>
+		<typeAlias type="com.nhserver.model.dto.BoardComment" alias="BoardComment"/>
+	</typeAliases>
+	
+	<environments default="development">
+		<environment id="development">			
+			
+			<transactionManager type="JDBC" />			
+			
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />				
+				<!--  
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />				
+				-->
+				<property name="username" value="minute" />
+				<property name="password" value="hot" />
+			</dataSource>
+			
+		</environment>
+	</environments>
+
+	<mappers>
+		<!-- 
+			Code에서 분리된 SQL문이 작성되고 객체와의 매핑 정보가 정의되는 파일들
+			경로는 패키지 경로를 사용 : com.demoweb -> com/demoweb 경로 
+		-->
+		<mapper resource="com/nhserver/model/mapper/nhMemberMapper.xml" />		 
+		<mapper resource="com/nhserver/model/mapper/MemberMapper.xml" />
+		<mapper resource="com/nhserver/model/mapper/BoardMapper.xml" />
+		<mapper resource="com/nhserver/model/mapper/nhManboMapper.xml" />
+		<mapper resource="com/nhserver/model/mapper/nhLocationMapper.xml" />
+		<mapper resource="com/nhserver/model/mapper/nhGcmMapper.xml" />
+	</mappers>
+
+</configuration>

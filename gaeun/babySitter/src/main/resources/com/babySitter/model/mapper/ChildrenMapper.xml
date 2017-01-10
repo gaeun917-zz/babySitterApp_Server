@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 논리적 클래스 만들기 -->
+<mapper namespace="com.babySitter.model.mapper.ChildrenMapper">
+
+	<resultMap type="Children" id="children_map">
+		<id property="child_no" column="child_no" />		
+		<result property="mother_no" column="mother_no" />
+		<result property="first_name" column="first_name" />
+		<result property="last_name" column="last_name" />	
+		<result property="gender" column="gender" />
+		<result property="birthday" column="birthday" />
+		<result property="photo" column="photo" />
+		<result property="toilet" column="toilet" />	
+		<result property="child_interest" column="child_interest" />
+		<result property="bath_time" column="bath_time" />
+		<result property="bed_time" column="bed_time" />
+		<result property="note" column="note" />		
+		
+		<!-- meal time 1:1 관계 -> DTO에 리스트로 받아줌    --> 
+		<association property="meal" column="child_no"  
+					 select="selectMealByChildNo" />
+	
+		<!--알러지 리스트 1;Many-->
+		<collection property="allergies" column="child_no" 
+		            select="selectAllergiesByChildNo"/>
+		<!-- 관심사 리스트 1:many  -->
+		<collection property="interest" column="child_no" 
+		            select="selectInterestByChildNo"/>
+		<!-- 부킹 리스트 1:many-->
+		<collection property="booking" column="booking_no" 
+		             select="selectChildNoByBookingNo"/>	
+		<!-- 시터 에약 리스트: 시터맵퍼에서 구현함  -->
+		<!-- <collection property="Sitter" column="child_no" 
+		             select="selectSitterByChildNo"/> -->			
+	</resultMap>	
+	
+	<resultMap type="Allergies" id="allergies_map">
+		<id property="allergies_no" column="allergies_no"/>
+		<result property="child_no" column="child_no"/>
+		<result property="allergies_name" column="allergies_name"/>
+		<result property="note" column="note"/>	
+	</resultMap>  	
+	
+	<resultMap type="Interest" id="interest_map">
+		<id property="interest_no" column="interest_no"/>
+		<result property="child_no" column="child_no"/>
+		<result property="interest_type" column="interest_type"/>
+	</resultMap>
+	
+	<resultMap type="Meal" id="meal_map">
+		<id property="meal_no" column="meal_no"/>
+		<result property="child_no" column="child_no"/>
+		<result property="breakfast" column="breakfast"/>
+		<result property="lunch" column="lunch"/>
+		<result property="dinner" column="dinner"/>
+		<result property="note" column="note"/>
+	</resultMap>
+	
+	<resultMap type="Booking" id="booking_map" >
+     	<id property="booking_no" column="booking_no" />
+      	<result property="child_no" column="child_no" />
+      	<result property="sitter_no" column="sitter_no" />
+	    <result property="pick_date" column="pick_date" />
+	    <result property="start_time" column="start_time" />
+	    <result property="end_time" column="end_time" />
+	    <result property="regdate" column="regdate" />    
+	 </resultMap>
+	<!-- <resultMap type="Sitter" id="sitter_map" >
+     	<id property="sitter_no" column="sitter_no" />
+      	<result property="name" column="name" />
+	    <result property="sitter_quality1" column="sitter_quality1" />
+	    <result property="sitter_quality2" column="sitter_quality2" />
+	    <result property="sitter_quality3" column="sitter_quality3" />
+	 </resultMap> -->
+	    
+	<sql id="selectDefault">
+		SELECT child_no, mother_no, first_name, last_name, gender, birthday, 
+		       photo, toilet, child_interest, bath_time, bed_time, note 
+		FROM Children
+ 	</sql>
+
+<!--  SELECT에는  property  Value에서 column명을 씀, 파라메터타입: dao      -->
+	<insert id="insertChildren" parameterType="Children" >
+		INSERT INTO Children 
+			(child_no, mother_no, first_name, last_name, gender,
+			 birthday<!-- , toilet, child_interest, bath_time, bed_time, note --> )
+		VALUES
+			(CHILDREN_SEQUENCE.nextval, #{mother_no}, #{first_name}, #{last_name}, #{gender}, 
+			 #{birthday}<!-- , #{toilet}, #{child_interest}, #{bath_time}, #{bed_time}, #{note} --> )
+	</insert> 
+	
+	
+	
+    <insert id="insertAllergies" parameterType="Allergies" >
+		INSERT INTO Allergies 
+			(allergies_no, child_no, allergies_name, note )
+		VALUES
+			(ALLERGIES_SEQUENCE.nextval, #{child_no}, #{fallergies_name}, #{note} )
+	</insert> 
+
+    <insert id="insertInterest" parameterType="Interest" >
+	    INSERT INTO Interest 
+			(Interest_no, child_no, interest_type)
+		VALUES
+			(INTEREST_SEQUENCE.nextval, #{child_no}, #{interest_type} )
+	</insert> 
+
+    <insert id="insertMeal" parameterType="Meal" >
+		 INSERT INTO Meal
+			(Meal_no, child_no, breakfast, lunch, dinner, note )
+		VALUES
+			(MEAL_SEQUENCE.nextval, #{child_no}, #{breakfast}, #{lunch}, #{dinner}, #{note} )
+	</insert> 
+
+
+
+
+
+	<select id="selectChildrenList" parameterType="hashMap" resultMap="children_map">
+		<include refid="selectDefault" />
+	</select>
+	<!--  selectChildrenByMotherNo 는 mothermapper에 있음    -->
+	<select id="selectChildrenByChildrenNo" parameterType="int" resultMap="children_map">
+		<include refid="selectDefault" />
+		WHERE  child_no = #{child_no}
+	</select>
+	<select id="selectMealByChildNo" parameterType="int" resultMap="meal_map">
+		SELECT *
+		FROM   Meal
+		WHERE  child_no = #{child_no}
+	</select>
+	
+	<select id="selectAllergiesByChildNo" parameterType="int" resultMap="allergies_map">
+		SELECT *
+		FROM   Allergies
+		WHERE  child_no = #{child_no}
+	</select>
+	
+	<select id="selectInterestByChildNo" parameterType="int" resultMap="interest_map">
+		SELECT *
+		FROM   Interest
+		WHERE  child_no = #{child_no}
+	</select>
+		
+	<select id="selectBookingByChildNo" parameterType="int" resultMap="booking_map">
+		SELECT *
+		FROM   Booking
+		WHERE  child_no = #{child_no}
+	</select>
+	
+<!--  booking no로 거기에 있는 아이와   -->	
+	<update id="updateMealByChildNo" parameterType="int">
+		UPDATE Meal
+		SET breakfast = #{breakfast},
+			lunch = #{lunch}
+			dinner = #{dinner}
+		WHERE child_no = #{child_no}	
+	</update>
+
+
+
+
+
+</mapper>
+  
+

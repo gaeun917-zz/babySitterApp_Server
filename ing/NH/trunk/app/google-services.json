@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "683212939546",
+    "project_id": "model-signifier-138323"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683212939546:android:5ab7b599e07066bb",
+        "android_client_info": {
+          "package_name": "com.androidnh.nh"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJ-PCraLpxARzz0u9mIxJ2V-kSoLzbILw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

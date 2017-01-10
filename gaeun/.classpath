@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/org.thymeleaf:thymeleaf:Release"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/org.thymeleaf.extras:thymeleaf-extras-springsecurity4:Release"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/org.thymeleaf:thymeleaf-spring4:Release"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/javax.json.processing-1.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/org.thymeleaf:thymeleaf:Release1"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/org.thymeleaf.extras:thymeleaf-extras-java8time:Release"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/org.thymeleaf.extras:thymeleaf-extras-springsecurity4:Release1"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/org.thymeleaf:thymeleaf-spring4:Release1"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javax.json.processing-1.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ejb-3.2"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/org.thymeleaf:thymeleaf:Release2"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/org.thymeleaf:thymeleaf-spring4:Release2"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javax.resource-api-1.7"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/javax.json.processing-1.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ConcurrencyUtilities-1.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JBoss Weld-2.0.3"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Hibernate Validator-5.0.1"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

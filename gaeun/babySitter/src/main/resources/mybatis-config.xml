@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<properties>
+		<property name="driver" value="com.jdbc.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@210.16.214.202:1521:xe" />
+		<property name="username" value="gaeun" />
+		<property name="password" value="gaeun" />
+	</properties>	
+ 
+	<typeAliases>
+		<typeAlias alias="Mother" type="com.babySitter.model.dto.Mother" />
+		<typeAlias alias="Children" type="com.babySitter.model.dto.Children" />
+		<typeAlias alias="Sitter" type="com.babySitter.model.dto.Sitter" />
+		<typeAlias alias="Age" type="com.babySitter.model.dto.Age" />
+		<typeAlias alias="Booking" type="com.babySitter.model.dto.Booking" />
+		<typeAlias alias="Allergies" type="com.babySitter.model.dto.Allergies" />
+		<typeAlias alias="Interest" type="com.babySitter.model.dto.Interest" />
+		<typeAlias alias="Meal" type="com.babySitter.model.dto.Meal" />
+		<typeAlias alias="Payment" type="com.babySitter.model.dto.Payment" />
+		<typeAlias alias="Skill" type="com.babySitter.model.dto.Skill" />
+		<typeAlias alias="UploadFile" type="com.babySitter.model.dto.UploadFile" />		
+	</typeAliases>
+
+
+	<environments default="development">
+		<environment id="development">					
+			<transactionManager type="JDBC" />			
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />				
+				<property name="username" value="gaeun" />
+				<property name="password" value="gaeun" />
+			</dataSource>				
+		</environment>
+	</environments>
+
+
+	<mappers>
+<!-- 
+			Code에서 분리된 SQL문이 작성되고 객체와의 매핑 정보가 정의되는 파일들
+			경로는 패키지 경로를 사용 : com.demoweb -> com/demoweb 경로 
+-->
+		<mapper resource="com/babySitter/model/mapper/MotherMapper.xml" />
+		<mapper resource="com/babySitter/model/mapper/ChildrenMapper.xml" />
+		<mapper resource="com/babySitter/model/mapper/SitterMapper.xml" />
+
+	</mappers>
+
+</configuration>
